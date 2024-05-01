@@ -1,0 +1,224 @@
+description: sc-SFM-TOSICA-model-runs 
+
+env_defaults:
+  NODES: 1 
+  GPUS: 1 ######################Change if your script requires GPUs 
+target:
+  service: sing
+  name: msrresrchvc ######################amlt ti sing
+  # workspace_name: msroctows ##################amlt wl sing
+  #mcr.microsoft.com/azureml/minimal-ubuntu22.04-py39-cuda11.8-gpu-inference:20240401.v1
+
+environment:
+  image: amlt-sing/acpt-2.0.1-cuda11.7 ######################amlt cache base-images (if your model needs specific cuda enviroment)
+  setup: 
+    - cd TOSICA
+    - pip install -e . #####################Needed packages
+    - pip install wandb
+storage:
+  data:
+    storage_account_name: exvivohot
+    container_name: data 
+    mount_dir: /mnt/data ###########Equals exvivohot/data (just leave this)
+  output:
+    storage_account_name: exvivohot
+    container_name: amulet-akshaya 
+    mount_dir: /mnt/outputs ##########is saying the output will save in amulet-akshaya
+code:
+    local_dir: /home/v-akthoutam/sc-SFM ##############point of reference that the script acts like its in 
+jobs:
+  - name: scSFM-TOSICA-random-1pct-seed0
+    sku: ${NODES}xG${GPUS}-A100 
+    priority: high 
+    command: 
+      #- mkdir /mnt/outputs/TOSICA_results
+      #- mkdir /mnt/outputs/TOSICA_results/random_inds
+      #- mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed0
+      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_1pct_seed0/idx_1pct_seed0_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed0 
+    submit_args:
+      env:
+        WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+        WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-1pct-seed1
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed1
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_1pct_seed1/idx_1pct_seed1_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed1 
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-1pct-seed2
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed2
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_1pct_seed2/idx_1pct_seed2_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed2 
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-1pct-seed3
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed3
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_1pct_seed3/idx_1pct_seed3_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed3 
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-1pct-seed4
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed4
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_1pct_seed4/idx_1pct_seed4_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_1pct_seed4 
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-10pct-seed5
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed5
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_10pct_seed5/idx_10pct_seed5_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed5
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-10pct-seed6
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed6
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_10pct_seed6/idx_10pct_seed6_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed6 
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-10pct-seed7
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed7
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_10pct_seed7/idx_10pct_seed7_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed7 
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-10pct-seed8
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed8
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_10pct_seed8/idx_10pct_seed8_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed8
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-10pct-seed9
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed9
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_10pct_seed9/idx_10pct_seed9_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_10pct_seed9 
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-25pct-seed10
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed10
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_25pct_seed10/idx_25pct_seed10_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed10
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-25pct-seed11
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed11
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_25pct_seed11/idx_25pct_seed11_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed11
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-25pct-seed12
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed12
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_25pct_seed12/idx_25pct_seed12_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed12
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-25pct-seed13
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed13
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_25pct_seed13/idx_25pct_seed13_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed13
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+
+  #  - name: scSFM-TOSICA-random-25pct-seed14
+  #    sku: ${NODES}xG${GPUS}-A100
+  #    priority: high
+  #    command:
+  #      - mkdir /mnt/outputs/TOSICA_results
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds
+  #      - mkdir /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed14
+  #      - . train_scripts/TOSICA/pretrain_TOSICA.sh /mnt/data/randomsplits_preprocessed/train/idx_25pct_seed14/idx_25pct_seed14_TRAIN_PREPROCESSED.h5ad TOSICA/resources/GO_bp.gmt cell_type /mnt/outputs/TOSICA_results/random_inds/anndata_25pct_seed14
+  #   submit_args:
+  #     env:
+  #       WANDB_BASE_URL: "https://microsoft-research.wandb.io"
+  #       WANDB_API_KEY: "$WANDB_API_KEY"
+

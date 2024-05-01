@@ -34,7 +34,7 @@ def todense(adata):
     import scipy
     #print((type(adata.X)))
     if isinstance(adata.X, scipy.sparse.csr_matrix) or isinstance(adata.X, scipy.sparse.csc_matrix):
-    return adata.X.todense()
+        return adata.X.todense()
     #else:
     #    return adata.X
 
