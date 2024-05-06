@@ -32,11 +32,11 @@ def set_seed(seed):
 
 def todense(adata):
     import scipy
-    #print((type(adata.X)))
+    print((type(adata.X)))
     if isinstance(adata.X, scipy.sparse.csr_matrix) or isinstance(adata.X, scipy.sparse.csc_matrix):
         return adata.X.todense()
-    #else:
-    #    return adata.X
+    else:
+        return adata.X
 
 class MyDataSet(Dataset):
     """ 
@@ -261,6 +261,7 @@ def fit_model(adata, gmt_path, project = None, pre_weights='', label_name='Cellt
     num_classes = np.int64(torch.max(label_train)+1)
     train_dataset = MyDataSet(exp_train, label_train)
     valid_dataset = MyDataSet(exp_valid, label_valid)
+    print("Dataset created")
     train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=batch_size,
                                                shuffle=True,
@@ -269,6 +270,7 @@ def fit_model(adata, gmt_path, project = None, pre_weights='', label_name='Cellt
                                              batch_size=batch_size,
                                              shuffle=False,
                                              pin_memory=True,drop_last=True)
+    print("Data Loaded")
     model = create_model(num_classes=num_classes, num_genes=len(exp_train[0]),  mask = mask,embed_dim=embed_dim,depth=depth,num_heads=num_heads,has_logits=False).to(device) 
     if pre_weights != "":
         assert os.path.exists(pre_weights), "pre_weights file: '{}' not exist.".format(pre_weights)
